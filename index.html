@@ -48,12 +48,12 @@
 		<img src="./jpg/5.jpg" alt="img" width="25%" height="25%">
 		<img src="./jpg/6.jpg" alt="img" width="25%" height="25%">
 	</body>
+	
 	<script>
-		<script>
 		// Function to set a cookie with name, value, and expiration time in minutes
 		function setCookie(name, value, minutes) {
 			const date = new Date();
-			date.setTime(date.getTime() + (minutes * 60 * 1000)); // Current time + expiry in ms
+			date.setTime(date.getTime() + (minutes * 60 * 1000)); // Set expiration time
 			const expires = "expires=" + date.toUTCString();
 			document.cookie = name + "=" + value + ";" + expires + ";path=/";
 		}
@@ -71,32 +71,24 @@
 			return null;
 		}
 		
-		// Get the current page load count from the cookie (or initialize it to 0)
+		// Get current page load count from cookie
 		let pageCount = getCookie('pageLoadCount');
-		
-		if (pageCount === null) {
-			pageCount = 0; // Initialize to 0 if cookie does not exist
-		} else {
-			pageCount = parseInt(pageCount); // Convert cookie value to a number
-		}
+		pageCount = pageCount ? parseInt(pageCount) : 0; // Initialize to 0 if cookie does not exist
 		
 		// Increment the counter
 		pageCount += 1;
 		
-		// Set the updated page load count in the cookie with a 30-minute expiration
-		const expirationTime = 30; // Cookie expiry in minutes
-		setCookie('pageLoadCount', pageCount, expirationTime);
+		// Set updated page load count in cookie with a 30-minute expiration
+		setCookie('pageLoadCount', pageCount, 30);
 		
-		// Set the expiration timestamp in a separate cookie for tracking (milliseconds since epoch)
+		// Set the expiration timestamp in a separate cookie
 		const expirationDate = new Date();
-		expirationDate.setMinutes(expirationDate.getMinutes() + expirationTime);
-		setCookie('expirationTime', expirationDate.getTime(), expirationTime);
+		expirationDate.setMinutes(expirationDate.getMinutes() + 30);
+		setCookie('expirationTime', expirationDate.getTime(), 30);
 		
-		// Check if the counter is 10 or more
+		// Check if the counter is 10 or more to redirect
 		if (pageCount >= 10) {
-			// Redirect to another page
-			window.location.href = "./whoa.html";
+			window.location.href = "./whoa.html"; // Change to your redirect page URL
 		}
-
 	</script>
 </html>

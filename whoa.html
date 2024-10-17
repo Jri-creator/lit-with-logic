@@ -21,7 +21,7 @@
 		}
 	</style>
 	<script>
-		// Function to get the value of a cookie by name
+		// Function to get a cookie by name
 		function getCookie(name) {
 			const nameEQ = name + "=";
 			const cookiesArray = document.cookie.split(';');
@@ -32,6 +32,14 @@
 				}
 			}
 			return null;
+		}
+		
+		// Function to set a cookie with a specified name, value, and expiration in minutes
+		function setCookie(name, value, minutes) {
+			const date = new Date();
+			date.setTime(date.getTime() + (minutes * 60 * 1000)); // Set expiration time
+			const expires = "expires=" + date.toUTCString();
+			document.cookie = name + "=" + value + ";" + expires + ";path=/";
 		}
 		
 		// Function to start the countdown based on expiration time
@@ -51,9 +59,15 @@
 				} else {
 					// If time is up, stop the countdown
 					clearInterval(countdownInterval);
-					document.getElementById("countdown").textContent = "Time is up! You may open the page again!";
+					document.getElementById("countdown").textContent = "Timer cleared.";
 				}
 			}, 1000);
+		}
+		
+		// Function to reset the page load count without affecting the timer
+		function resetPageLoadCountOnly() {
+			setCookie('pageLoadCount', 0, 30); // Reset page load count to 0
+			alert("Page load count has been reset to 0.");
 		}
 		
 		// On page load
@@ -65,8 +79,27 @@
 				const expirationTimestamp = parseInt(expirationTime);
 				startCountdown(expirationTimestamp);
 			} else {
-				document.getElementById("countdown").textContent = "No time information available. You can open the page.";
+				document.getElementById("countdown").textContent = "No timer set.";
 			}
+			
+			// Track key presses for the sequence J - R - I - R
+			let keys = [];
+			const resetSequence = ['j', 'r', 'i', '-', 'r'];
+			
+			document.addEventListener('keydown', function(event) {
+				keys.push(event.key.toLowerCase()); // Capture the key pressed
+				
+				// Check if the last keys match the reset sequence
+				if (keys.length > resetSequence.length) {
+					keys.shift(); // Remove the oldest key to maintain the sequence length
+				}
+				
+				// If the keys match the reset sequence, reset the count without changing the timer
+				if (keys.join('') === resetSequence.join('')) {
+					resetPageLoadCountOnly(); // Call the reset function for the page load count
+					keys = []; // Reset the keys array after successful input
+				}
+			});
 		}
 	</script>
 	<body>
