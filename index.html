@@ -48,4 +48,55 @@
 		<img src="./jpg/5.jpg" alt="img" width="25%" height="25%">
 		<img src="./jpg/6.jpg" alt="img" width="25%" height="25%">
 	</body>
+	<script>
+		<script>
+		// Function to set a cookie with name, value, and expiration time in minutes
+		function setCookie(name, value, minutes) {
+			const date = new Date();
+			date.setTime(date.getTime() + (minutes * 60 * 1000)); // Current time + expiry in ms
+			const expires = "expires=" + date.toUTCString();
+			document.cookie = name + "=" + value + ";" + expires + ";path=/";
+		}
+		
+		// Function to get a cookie by name
+		function getCookie(name) {
+			const nameEQ = name + "=";
+			const cookiesArray = document.cookie.split(';');
+			for (let i = 0; i < cookiesArray.length; i++) {
+				let cookie = cookiesArray[i].trim();
+				if (cookie.indexOf(nameEQ) === 0) {
+					return cookie.substring(nameEQ.length, cookie.length);
+				}
+			}
+			return null;
+		}
+		
+		// Get the current page load count from the cookie (or initialize it to 0)
+		let pageCount = getCookie('pageLoadCount');
+		
+		if (pageCount === null) {
+			pageCount = 0; // Initialize to 0 if cookie does not exist
+		} else {
+			pageCount = parseInt(pageCount); // Convert cookie value to a number
+		}
+		
+		// Increment the counter
+		pageCount += 1;
+		
+		// Set the updated page load count in the cookie with a 30-minute expiration
+		const expirationTime = 30; // Cookie expiry in minutes
+		setCookie('pageLoadCount', pageCount, expirationTime);
+		
+		// Set the expiration timestamp in a separate cookie for tracking (milliseconds since epoch)
+		const expirationDate = new Date();
+		expirationDate.setMinutes(expirationDate.getMinutes() + expirationTime);
+		setCookie('expirationTime', expirationDate.getTime(), expirationTime);
+		
+		// Check if the counter is 10 or more
+		if (pageCount >= 10) {
+			// Redirect to another page
+			window.location.href = "./whoa.html";
+		}
+
+	</script>
 </html>

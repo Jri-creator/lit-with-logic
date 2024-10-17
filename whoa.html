@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="shortcut icon" href="TemplateData/favicon.ico">
+		<title>Hold it right there...</title>
+	</head>
+	<style>	
+		.p {
+			font-family: Arial;
+		}
+		.b {
+			display: block;
+			margin: auto;
+		}
+		iframe {
+			margin:auto;
+			display:block;
+			width: 100%;
+			height: 700px;
+		}
+	</style>
+	<script>
+		// Function to get the value of a cookie by name
+		function getCookie(name) {
+			const nameEQ = name + "=";
+			const cookiesArray = document.cookie.split(';');
+			for (let i = 0; i < cookiesArray.length; i++) {
+				let cookie = cookiesArray[i].trim();
+				if (cookie.indexOf(nameEQ) === 0) {
+					return cookie.substring(nameEQ.length, cookie.length);
+				}
+			}
+			return null;
+		}
+		
+		// Function to start the countdown based on expiration time
+		function startCountdown(expirationTimestamp) {
+			const countdownInterval = setInterval(() => {
+				const now = new Date().getTime(); // Current timestamp
+				const timeLeft = expirationTimestamp - now; // Time left in milliseconds
+				
+				if (timeLeft > 0) {
+					// Calculate minutes and seconds
+					const minutes = Math.floor(timeLeft / (1000 * 60));
+					const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+					
+					// Display the countdown
+					document.getElementById("countdown").textContent = 
+					`${minutes} minute(s) and ${seconds} second(s) left`;
+				} else {
+					// If time is up, stop the countdown
+					clearInterval(countdownInterval);
+					document.getElementById("countdown").textContent = "Time is up! You may open the page again!";
+				}
+			}, 1000);
+		}
+		
+		// On page load
+		window.onload = function () {
+			// Get the expiration timestamp from the cookie
+			const expirationTime = getCookie('expirationTime');
+			
+			if (expirationTime) {
+				const expirationTimestamp = parseInt(expirationTime);
+				startCountdown(expirationTimestamp);
+			} else {
+				document.getElementById("countdown").textContent = "No time information available. You can open the page.";
+			}
+		}
+	</script>
+	<body>
+		<h1 class="p">Hold it right there!</h1>
+		<p class="p">Looks like you loaded this page too many times. Try again in:</p>
+		<p class="p" id="countdown">Retreiving info</p>
+	</body>
+</html>
